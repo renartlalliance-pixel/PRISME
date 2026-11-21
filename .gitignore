@@ -1,0 +1,58 @@
+# =====================================================================
+# PrismeMix — exclusions du depôt
+# Regle : on versionne le CODE et les ASSETS, jamais les SORTIES.
+# Tout ce qui est ci-dessous se regenere en relancant cmake.
+# =====================================================================
+
+# --- Repertoires de build (environ 1 Go au total) ---
+build/
+build_*/
+build-*/
+out/
+cmake-build-*/
+
+# --- CMake / Visual Studio (generes dans les repertoires de build) ---
+CMakeCache.txt/
+CMakeFiles/
+CMakeScripts/
+Testing/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.dir/
+x64/
+Win32/
+Debug/
+Release/
+ipch/
+.vs/
+
+# --- Objets et liens (generes) ---
+*.obj
+*.o
+*.pdb
+*.ilk
+*.idb
+*.exp
+*.lib
+*.a
+*.tlog
+*.lastbuildstate
+*.log
+
+# --- Artefacts JUCE (regeneres par le build) ---
+Prisme_artefacts/
+JuceLibraryCode/
+
+# --- Sauvegardes manuelles (git les remplace) ---
+*.zip
+*.rar
+*_backup_*/
+*_backup.*
+BACKUP_*/
+
+# --- Fichiers systeme ---
+Thumbs.db
+desktop.ini
+.DS_Store

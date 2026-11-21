@@ -1,0 +1,26 @@
+{
+  "name": "PRISME Soviet Analog",
+  "version": "1.1.0",
+  "colors": {
+    "background": "#171716",
+    "background_deep": "#0C0C0B",
+    "panel": "#292824",
+    "panel_dark": "#181817",
+    "metal_light": "#C0B7A6",
+    "metal_mid": "#8B8578",
+    "metal_dark": "#4B4942",
+    "metal_edge": "#D0C6B4",
+    "text": "#E6DFD1",
+    "text_dim": "#9D9689",
+    "accent_red": "#E0442E",
+    "accent_red_dark": "#8E241D",
+    "accent_amber": "#FF7A1A",
+    "accent_blue": "#4CA6C8",
+    "accent_violet": "#8B70B7",
+    "led_off": "#3A211D",
+    "grid": "#4A443B",
+    "patina": "#736B5C",
+    "accent_knob": "#FF7A1A"
+  },
+  "usage": "Design tokens. Use accent_knob (#FF7A1A) for potentiometer rings/arcs and knob highlights. Keep accent_blue only for existing non-knob status indicators if needed. Use the palette centrally in the JUCE LookAndFeel."
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Prisme — maquette REFONTE VITRAIL</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #07080f; font-family: "Segoe UI", Arial, sans-serif; display: flex; gap: 32px; justify-content: center; padding: 24px; color: #e8ecf5; }
+  .plug { width: 880px; height: 910px; border-radius: 16px; padding: 14px 16px; position: relative;
+    background: radial-gradient(120% 90% at 50% 0%, #1b1440 0%, #0a0a18 55%, #060611 100%);
+    border: 1px solid #2c2350; box-shadow: 0 0 60px rgba(120,80,255,.25), inset 0 0 80px rgba(60,30,120,.25); }
+  .strip-top { height: 6px; border-radius: 3px;
+    background: linear-gradient(90deg,#ff5e8a,#ffc36b,#5effc3,#7df9ff,#9d7bff,#ff5e8a);
+    box-shadow: 0 0 14px rgba(255,120,180,.8); }
+  h1 { text-align: center; letter-spacing: 14px; font-size: 30px; margin: 8px 0 10px; color: #fff;
+    text-shadow: 0 0 18px rgba(125,249,255,.9), 0 0 46px rgba(157,123,255,.7); }
+  .panel { border-radius: 14px; padding: 10px 14px; margin-bottom: 10px; position: relative;
+    background: linear-gradient(135deg, rgba(255,94,138,.10), rgba(125,249,255,.06) 45%, rgba(157,123,255,.12));
+    border: 1px solid rgba(150,140,255,.35); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 0 22px rgba(120,90,255,.18); }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .combo { background: rgba(10,10,26,.75); border: 1px solid rgba(150,140,255,.5); border-radius: 8px; color: #fff;
+    padding: 5px 10px; font-size: 13px; box-shadow: 0 0 10px rgba(120,90,255,.25); }
+  .pads { display: flex; flex-direction: column; gap: 8px; align-items: center; margin: 10px 0 4px; }
+  .padrow { display: flex; gap: 10px; }
+  .pad { width: 24px; height: 24px; border-radius: 50%; background: rgba(30,30,60,.8);
+    border: 1px solid rgba(150,150,200,.35); display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: bold; color: #8f96b8; }
+  .pad.lit { background: radial-gradient(circle at 35% 30%, #ffd9a8, #ff5e8a 75%); color: #fff; border-color: #ffd9a8;
+    box-shadow: 0 0 12px rgba(255,94,138,.95); }
+  .pad.root { outline: 2px solid #fff; box-shadow: 0 0 16px #fff; }
+  .knobs { display: flex; gap: 8px; justify-content: center; margin-top: 6px; }
+  .knob { text-align: center; }
+  .knob .dial { width: 92px; height: 92px; border-radius: 50%; margin: 0 auto; position: relative;
+    background: conic-gradient(from 200deg, #ff5e8a, #ffc36b, #5effc3, #7df9ff, #9d7bff, #ff5e8a);
+    box-shadow: 0 0 18px rgba(150,110,255,.55); }
+  .knob .dial::before { content: ""; position: absolute; inset: 9px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #2b2350, #0b0a1c); }
+  .knob .dial::after { content: ""; position: absolute; left: 50%; top: 12px; width: 5px; height: 30px; margin-left: -2px;
+    background: #fff; border-radius: 3px; box-shadow: 0 0 10px #fff, 0 0 20px #7df9ff;
+    transform-origin: 50% 34px; transform: rotate(38deg); }
+  .knob .val { display: inline-block; margin-top: 4px; color: #7df9ff; font-size: 12px; padding: 1px 10px;
+    border-radius: 10px; border: 1px solid rgba(125,249,255,.5); background: rgba(10,20,30,.6);
+    text-shadow: 0 0 8px rgba(125,249,255,.8); font-variant-numeric: tabular-nums; }
+  .knob .nam { font-size: 11px; font-weight: bold; color: #cfd4ff; margin-top: 2px; letter-spacing: 1px;
+    text-shadow: 0 0 8px rgba(157,123,255,.8); }
+  .sect { text-align: center; font-size: 12px; font-weight: bold; letter-spacing: 5px; margin-bottom: 8px; }
+  .sect.cyan { color: #7df9ff; text-shadow: 0 0 12px rgba(125,249,255,.9); }
+  .sect.mint { color: #5effc3; text-shadow: 0 0 12px rgba(94,255,195,.9); }
+  .sect.violet { color: #c9b3ff; text-shadow: 0 0 12px rgba(157,123,255,.9); }
+  .tog { display: flex; gap: 6px; align-items: center; font-size: 12px; color: #dfe4ff; }
+  .pill { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: bold;
+    background: rgba(94,255,195,.15); border: 1px solid #5effc3; color: #5effc3; box-shadow: 0 0 10px rgba(94,255,195,.5); }
+  .pill.off { background: transparent; border-color: #565b7a; color: #8f96b8; box-shadow: none; }
+  .eqrow { display: flex; gap: 20px; justify-content: center; align-items: flex-end; }
+  .f { text-align: center; }
+  .f .rail { width: 30px; height: 96px; margin: 0 auto; border-radius: 8px;
+    background: linear-gradient(180deg, rgba(255,94,138,.25), rgba(125,249,255,.25));
+    border: 1px solid rgba(180,170,255,.5); box-shadow: 0 0 12px rgba(150,110,255,.4); position: relative; }
+  .f .cap { position: absolute; left: 1px; right: 1px; height: 12px; border-radius: 6px;
+    background: #fff; box-shadow: 0 0 10px #c9b3ff, 0 0 20px #9d7bff; }
+  .f .val { display: inline-block; margin-top: 4px; color: #c9b3ff; font-size: 11px; padding: 1px 8px;
+    border-radius: 10px; border: 1px solid rgba(157,123,255,.6); }
+  .f .nam { font-size: 11px; font-weight: bold; color: #cfd4ff; }
+  .layout { display: flex; gap: 12px; }
+  .left { flex: 1; }
+  .side { width: 140px; }
+  .bigf { display: flex; gap: 8px; justify-content: center; }
+  .bigf .rail { width: 36px; height: 560px;
+    background: linear-gradient(180deg, rgba(125,249,255,.35), rgba(255,94,138,.35), rgba(157,123,255,.35)); }
+  .presets { display: flex; gap: 8px; }
+  .pbtn { text-align: center; font-size: 12px; padding: 5px 0; border-radius: 8px; color: #fff;
+    background: rgba(157,123,255,.14); border: 1px solid rgba(157,123,255,.55); box-shadow: 0 0 12px rgba(150,110,255,.3); }
+  .foot { text-align: center; font-size: 11px; color: #6f76a0; margin-top: 8px; }
+  .capmode { max-width: 300px; color: #d5d9ee; font-size: 14px; line-height: 1.6; }
+  .capmode h2 { color: #9d7bff; letter-spacing: 3px; margin-bottom: 10px; text-shadow: 0 0 14px rgba(157,123,255,.8); }
+  .capmode li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="plug">
+  <div class="strip-top"></div>
+  <h1>PRISME</h1>
+  <div class="layout">
+    <div class="left">
+      <div class="panel">
+        <div class="row"><span class="combo">A# ▾</span><span class="combo">Major ▾</span><span class="combo">0 Medium ▾</span><span class="tog"><span class="pill off">Givre</span></span></div>
+        <div class="pads">
+          <div class="padrow"><span class="pad">C#</span><span class="pad">D#</span><span class="pad">F#</span><span class="pad">G#</span><span class="pad lit root">A#</span></div>
+          <div class="padrow"><span class="pad">C</span><span class="pad lit">D</span><span class="pad">E</span><span class="pad lit">F</span><span class="pad lit">G</span><span class="pad lit">A</span><span class="pad">B</span></div>
+        </div>
+        <div class="knobs">
+          <div class="knob"><div class="dial"></div><div class="val">2.80</div><div class="nam">Resonance</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.020</div><div class="nam">Attaque</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.700</div><div class="nam">Couleur</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">1.318</div><div class="nam">Iridescence</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.770</div><div class="nam">Vivant</div></div>
+        </div>
+        <div class="knobs">
+          <div class="knob"><div class="dial"></div><div class="val">0.800</div><div class="nam">Largeur</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.0</div><div class="nam">Entree</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.0</div><div class="nam">Sortie</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">3.33</div><div class="nam">Taux Arp</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="sect cyan">ARPEGE</div>
+        <div class="row"><span class="tog"><span class="pill">Arp On</span></span><span class="combo">Haut-Bas ▾</span><span class="tog"><span class="pill">Sync Tempo</span></span><span class="combo">1/16 ▾</span></div>
+      </div>
+      <div class="panel">
+        <div class="sect mint">MOUVEMENT</div>
+        <div class="row"><div class="knobs" style="margin:0">
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">4.57</div><div class="nam">Vitesse</div></div>
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">0.736</div><div class="nam">Force</div></div>
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">0.648</div><div class="nam">Forme</div></div>
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">0.248</div><div class="nam">Unisson</div></div>
+        </div><span class="tog"><span class="pill">Sync Tempo</span></span><span class="combo">1/4 ▾</span></div>
+      </div>
+      <div class="panel">
+        <div class="sect violet">EQ</div>
+        <div class="eqrow">
+          <div class="f"><div class="rail"><div class="cap" style="top:60%"></div></div><div class="val">-12.0</div><div class="nam">Graves 150</div></div>
+          <div class="f"><div class="rail"><div class="cap" style="top:30%"></div></div><div class="val">-4.0</div><div class="nam">Bas-Med 800</div></div>
+          <div class="f"><div class="rail"><div class="cap" style="top:55%"></div></div><div class="val">-7.6</div><div class="nam">Haut-Med 3k</div></div>
+          <div class="f"><div class="rail"><div class="cap" style="top:12%"></div></div><div class="val">8.0</div><div class="nam">Aigus 8k</div></div>
+        </div>
+      </div>
+      <div class="row presets"><span class="combo" style="flex:3">Aurore ▾ — Factory + User preset…</span><span class="combo" style="flex:1">Nom…</span><span class="pbtn" style="flex:0 0 80px">Sauver</span><span class="pbtn" style="flex:0 0 40px">X</span></div>
+      <div class="foot">Fenetre 880x910 — maquette statique</div>
+    </div>
+    <div class="side">
+      <div class="panel" style="height:100%">
+        <div class="bigf">
+          <div class="f"><div class="nam">MIX</div><div class="rail"><div class="cap" style="top:40%"></div></div><div class="val">50%</div><div class="nam">DRY</div></div>
+          <div class="f"><div class="nam">MIRAGE</div><div class="rail"><div class="cap" style="top:55%"></div></div><div class="val">30%</div><div class="nam">DRY</div></div>
+          <div class="f"><div class="nam">BANDE</div><div class="rail"><div class="cap" style="top:8%"></div></div><div class="val">3.1k</div><div class="nam">26</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="capmode">
+  <h2>REFONTE VITRAIL</h2>
+  <ul>
+    <li><b>Verre irisé</b> : panneaux translucides aux reflets arc-en-ciel, bordures lumineuses.</li>
+    <li><b>Potards spectraux</b> : anneau conique multicolore, aiguille blanche incandescente.</li>
+    <li><b>Pastilles et toggles</b> en vitrail allumé (corail, menthe, cyan selon section).</li>
+    <li><b>Coût</b> : LookAndFeel custom + dégradés, ~2-3h, zéro DSP touché.</li>
+  </ul>
+</div>
+</body>
+</html>

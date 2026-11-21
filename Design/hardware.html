@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Prisme — maquette HARDWARE STUDIO</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #141518; font-family: "Segoe UI", Arial, sans-serif; display: flex; gap: 32px; justify-content: center; padding: 24px; color: #d7d9de; }
+  .plug { width: 880px; height: 910px; border-radius: 10px; padding: 14px 16px;
+    background: linear-gradient(180deg, #34373d 0%, #26282d 40%, #1e2024 100%);
+    border: 1px solid #0c0d0f; box-shadow: inset 0 1px 0 #4a4e56, 0 18px 50px rgba(0,0,0,.6); position: relative; }
+  .strip-top { height: 5px; border-radius: 3px; background: linear-gradient(90deg,#c96a5e,#c9a24b,#7ba05b,#4b8fc9); opacity:.85; }
+  h1 { text-align: center; letter-spacing: 14px; font-size: 30px; color: #eceff3; margin: 8px 0 10px;
+    text-shadow: 0 -1px 0 #000, 0 1px 0 #565b64; }
+  .panel { border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; position: relative;
+    background: linear-gradient(180deg, #2e3138 0%, #24262b 100%);
+    border: 1px solid #101215; box-shadow: inset 0 1px 0 #484c55, inset 0 -1px 0 #000, 0 2px 6px rgba(0,0,0,.5); }
+  .screw { position: absolute; width: 9px; height: 9px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #9aa0aa, #3a3d43 70%);
+    box-shadow: inset 0 -1px 1px #000; }
+  .screw.tl { top: 6px; left: 6px; } .screw.tr { top: 6px; right: 6px; }
+  .screw.bl { bottom: 6px; left: 6px; } .screw.br { bottom: 6px; right: 6px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .combo { background: #17181c; border: 1px solid #0a0b0d; border-radius: 5px; color: #e8eaf0;
+    padding: 5px 10px; font-size: 13px; box-shadow: inset 0 2px 4px #000; }
+  .pads { display: flex; flex-direction: column; gap: 8px; align-items: center; margin: 10px 0 4px; }
+  .padrow { display: flex; gap: 10px; }
+  .pad { width: 24px; height: 24px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #3c4048, #1c1e22);
+    border: 1px solid #0b0c0e; box-shadow: 0 2px 3px rgba(0,0,0,.6); display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: bold; color: #7c828c; }
+  .pad.lit { background: radial-gradient(circle at 35% 30%, #ffb199, #e2574c 70%); color: #fff;
+    box-shadow: 0 0 8px rgba(226,87,76,.8), 0 2px 3px rgba(0,0,0,.6); }
+  .pad.root { outline: 2px solid #f2f4f8; }
+  .knobs { display: flex; gap: 8px; justify-content: center; margin-top: 6px; }
+  .knob { text-align: center; }
+  .knob .dial { width: 92px; height: 92px; border-radius: 50%; margin: 0 auto; position: relative;
+    background: conic-gradient(from 210deg, #3a3e46, #17181c 70%, #3a3e46);
+    border: 2px solid #0b0c0e; box-shadow: inset 0 2px 5px rgba(255,255,255,.12), inset 0 -3px 6px #000, 0 3px 6px rgba(0,0,0,.6); }
+  .knob .dial::after { content: ""; position: absolute; left: 50%; top: 6px; width: 5px; height: 26px; margin-left: -2px;
+    background: #ffb648; border-radius: 3px; box-shadow: 0 0 6px rgba(255,182,72,.9); transform-origin: 50% 40px; transform: rotate(38deg); }
+  .knob .val { display: inline-block; margin-top: 4px; background: #101114; color: #ffcf7d; font-size: 12px; padding: 1px 10px;
+    border-radius: 3px; border: 1px solid #000; font-variant-numeric: tabular-nums; }
+  .knob .nam { font-size: 11px; font-weight: bold; color: #b9bec8; text-shadow: 0 -1px 0 #000; margin-top: 2px; letter-spacing: .5px; }
+  .sect { text-align: center; font-size: 12px; font-weight: bold; letter-spacing: 4px; color: #d8b25c;
+    text-shadow: 0 -1px 0 #000; margin-bottom: 8px; }
+  .tog { display: flex; gap: 6px; align-items: center; font-size: 12px; color: #c9cdd6; }
+  .led { width: 11px; height: 11px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff2c9, #e09a2b 70%);
+    box-shadow: 0 0 7px rgba(224,154,43,.9); border: 1px solid #6b4a12; }
+  .led.off { background: radial-gradient(circle at 35% 30%, #4a4e56, #1d1f23); box-shadow: none; }
+  .eqrow { display: flex; gap: 20px; justify-content: center; align-items: flex-end; }
+  .f { text-align: center; }
+  .f .rail { width: 34px; height: 96px; margin: 0 auto; border-radius: 4px; background: #141518;
+    border: 1px solid #0a0b0d; box-shadow: inset 0 2px 6px #000; position: relative; }
+  .f .cap { position: absolute; left: 2px; right: 2px; height: 12px; border-radius: 2px;
+    background: linear-gradient(180deg, #c8ccd4, #7d828c); box-shadow: 0 1px 3px #000; }
+  .f .val { display: inline-block; margin-top: 4px; background: #101114; color: #ffcf7d; font-size: 11px; padding: 1px 8px; border-radius: 3px; border: 1px solid #000; }
+  .f .nam { font-size: 11px; font-weight: bold; color: #b9bec8; text-shadow: 0 -1px 0 #000; }
+  .layout { display: flex; gap: 12px; }
+  .left { flex: 1; }
+  .side { width: 140px; }
+  .bigf { display: flex; gap: 8px; justify-content: center; }
+  .bigf .rail { width: 40px; height: 560px; }
+  .presets { display: flex; gap: 8px; }
+  .pbtn { flex: 1; text-align: center; font-size: 12px; padding: 5px 0; border-radius: 5px; color: #dfe2e9;
+    background: linear-gradient(180deg, #3a3e46, #23252a); border: 1px solid #0c0d0f;
+    box-shadow: inset 0 1px 0 #545963, 0 2px 4px rgba(0,0,0,.5); }
+  .foot { text-align: center; font-size: 11px; color: #7c828c; margin-top: 8px; }
+  .capmode { max-width: 300px; color: #cfd3db; font-size: 14px; line-height: 1.6; }
+  .capmode h2 { color: #ffb648; letter-spacing: 3px; margin-bottom: 10px; }
+  .capmode li { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="plug">
+  <div class="strip-top"></div>
+  <h1>PRISME</h1>
+  <div class="layout">
+    <div class="left">
+      <div class="panel"><span class="screw tl"></span><span class="screw tr"></span><span class="screw bl"></span><span class="screw br"></span>
+        <div class="row"><span class="combo">A# ▾</span><span class="combo">Major ▾</span><span class="combo">0 Medium ▾</span><span class="tog"><span class="led off"></span>Givre</span></div>
+        <div class="pads">
+          <div class="padrow"><span class="pad">C#</span><span class="pad">D#</span><span class="pad">F#</span><span class="pad">G#</span><span class="pad lit root">A#</span></div>
+          <div class="padrow"><span class="pad">C</span><span class="pad lit">D</span><span class="pad">E</span><span class="pad lit">F</span><span class="pad lit">G</span><span class="pad lit">A</span><span class="pad">B</span></div>
+        </div>
+        <div class="knobs">
+          <div class="knob"><div class="dial"></div><div class="val">2.80</div><div class="nam">Resonance</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.020</div><div class="nam">Attaque</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.700</div><div class="nam">Couleur</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">1.318</div><div class="nam">Iridescence</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.770</div><div class="nam">Vivant</div></div>
+        </div>
+        <div class="knobs">
+          <div class="knob"><div class="dial"></div><div class="val">0.800</div><div class="nam">Largeur</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.0</div><div class="nam">Entree</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">0.0</div><div class="nam">Sortie</div></div>
+          <div class="knob"><div class="dial"></div><div class="val">3.33</div><div class="nam">Taux Arp</div></div>
+        </div>
+      </div>
+      <div class="panel"><span class="screw tl"></span><span class="screw tr"></span><span class="screw bl"></span><span class="screw br"></span>
+        <div class="sect">ARPEGE</div>
+        <div class="row"><span class="tog"><span class="led"></span>Arp On</span><span class="combo">Haut-Bas ▾</span><span class="tog"><span class="led"></span>Sync Tempo</span><span class="combo">1/16 ▾</span></div>
+      </div>
+      <div class="panel"><span class="screw tl"></span><span class="screw tr"></span><span class="screw bl"></span><span class="screw br"></span>
+        <div class="sect">MOUVEMENT</div>
+        <div class="row"><div class="knobs" style="margin:0">
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">4.57</div><div class="nam">Vitesse</div></div>
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">0.736</div><div class="nam">Force</div></div>
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">0.648</div><div class="nam">Forme</div></div>
+          <div class="knob"><div class="dial" style="width:64px;height:64px"></div><div class="val">0.248</div><div class="nam">Unisson</div></div>
+        </div><span class="tog"><span class="led"></span>Sync Tempo</span><span class="combo">1/4 ▾</span></div>
+      </div>
+      <div class="panel"><span class="screw tl"></span><span class="screw tr"></span><span class="screw bl"></span><span class="screw br"></span>
+        <div class="sect">EQ</div>
+        <div class="eqrow">
+          <div class="f"><div class="rail"><div class="cap" style="top:60%"></div></div><div class="val">-12.0</div><div class="nam">Graves 150</div></div>
+          <div class="f"><div class="rail"><div class="cap" style="top:30%"></div></div><div class="val">-4.0</div><div class="nam">Bas-Med 800</div></div>
+          <div class="f"><div class="rail"><div class="cap" style="top:55%"></div></div><div class="val">-7.6</div><div class="nam">Haut-Med 3k</div></div>
+          <div class="f"><div class="rail"><div class="cap" style="top:12%"></div></div><div class="val">8.0</div><div class="nam">Aigus 8k</div></div>
+        </div>
+      </div>
+      <div class="row presets"><span class="combo" style="flex:3">Aurore ▾ — Factory + User preset…</span><span class="combo" style="flex:1">Nom…</span><span class="pbtn" style="flex:0 0 80px">Sauver</span><span class="pbtn" style="flex:0 0 40px">X</span></div>
+      <div class="foot">Fenetre 880x910 — maquette statique</div>
+    </div>
+    <div class="side">
+      <div class="panel" style="height:100%">
+        <div class="bigf">
+          <div class="f"><div class="nam">MIX</div><div class="rail"><div class="cap" style="top:40%"></div></div><div class="val">50%</div><div class="nam">DRY</div></div>
+          <div class="f"><div class="nam">MIRAGE</div><div class="rail"><div class="cap" style="top:55%"></div></div><div class="val">30%</div><div class="nam">DRY</div></div>
+          <div class="f"><div class="nam">BANDE</div><div class="rail"><div class="cap" style="top:8%"></div></div><div class="val">3.1k</div><div class="nam">26</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="capmode">
+  <h2>HARDWARE STUDIO</h2>
+  <ul>
+    <li><b>Métal brossé</b> : panneaux dégradés, vis aux 4 coins, biseaux gravés.</li>
+    <li><b>Potards massifs</b> : couronne conique, repère ambre lumineux, valeur sur afficheur.</li>
+    <li><b>LEDs</b> à la place des cases à cocher, étiquettes gravées (ombre portée).</li>
+    <li><b>Coût</b> : LookAndFeel custom + vis dessinées, ~2-3h, zéro DSP touché.</li>
+  </ul>
+</div>
+</body>
+</html>

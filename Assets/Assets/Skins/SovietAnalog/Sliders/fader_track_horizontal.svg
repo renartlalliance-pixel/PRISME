@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="44" viewBox="0 0 260 44">
+<defs>
+ <linearGradient id="metal" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="#D8D0C0"/><stop offset="0.18" stop-color="#8D877A"/><stop offset="0.43" stop-color="#4C4A43"/><stop offset="0.64" stop-color="#A39B8A"/><stop offset="0.82" stop-color="#55534C"/><stop offset="1" stop-color="#D0C6B4"/></linearGradient>
+ <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4C4A43"/><stop offset="0.45" stop-color="#292926"/><stop offset="1" stop-color="#121212"/></linearGradient>
+ <linearGradient id="red" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8B61"/><stop offset="0.45" stop-color="#E0442E"/><stop offset="1" stop-color="#731C16"/></linearGradient>
+ <linearGradient id="amber" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFD18A"/><stop offset="0.5" stop-color="#D9913D"/><stop offset="1" stop-color="#753A12"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.2"/></filter>
+ <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs><rect x="5" y="14" width="250" height="16" rx="8" fill="#080808" stroke="#9A9180" stroke-width="1.5"/><rect x="10" y="18" width="240" height="7" rx="3" fill="#0B0B0A" stroke="#4E493F"/><path d="M16 8V13 M40 10V13 M64 10V13 M88 10V13 M112 8V13 M136 10V13 M160 10V13 M184 10V13 M208 8V13 M232 10V13" stroke="#C0B7A6" stroke-width="1"/></svg>

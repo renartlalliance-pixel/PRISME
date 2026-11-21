@@ -1,0 +1,37 @@
+{
+  "reference_size": [
+    1670,
+    941
+  ],
+  "skin_name": "KAY<3",
+  "assets": {
+    "doll_emo_goth_ledge.png": {
+      "x": 1276,
+      "y": 259,
+      "w": 108,
+      "h": 68,
+      "note": "Poupée accrochée au rebord bas du spectrogramme ; le bas de l'image = le rebord (le corps est caché). Clipper à la zone du graphe."
+    },
+    "punk_masque_ledge.png": {
+      "x": 574,
+      "y": 16,
+      "w": 93,
+      "h": 68,
+      "note": "Punk masqué accroché au rebord bas du bandeau du haut, à gauche du titre ; bas de l'image = rebord (corps caché)."
+    },
+    "licorne_tete_filigrane.png": {
+      "x": 188,
+      "y": 189,
+      "w": 308,
+      "h": 362,
+      "note": "Filigrane derrière les potards KEY / SCALE : dessiner SOUS les contrôles (z-order inférieur), jamais au-dessus des potards/libellés. Zone visible : x 46-622, y 208-550."
+    },
+    "plaque_verre_KAY.png": {
+      "x": 346,
+      "y": 24,
+      "w": 226,
+      "h": 54,
+      "note": "Plaque de verre dépolie avec KAY gravé (griffonné), entre le sélecteur Skin et le titre PRISME. Le texte est une image, pas du texte JUCE."
+    }
+  }
+}
