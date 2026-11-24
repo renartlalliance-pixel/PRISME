@@ -423,7 +423,7 @@ void RecorderView::rebuildStack()
         stackList.addAndMakeVisible(row.get());
         rows.push_back(std::move(row));
     }
-    int w = juce::jmax(stackViewport.getWidth(), 600);
+    int w = juce::jmax(600, stackViewport.getWidth() - ((int) rows.size() * TakeRow::h > stackViewport.getHeight() ? stackViewport.getScrollBarThickness() : 0));
     stackList.setSize(w, (int) rows.size() * TakeRow::h);
     for (size_t i = 0; i < rows.size(); ++i)
         rows[i]->setBounds(0, (int) i * TakeRow::h, w, TakeRow::h);
@@ -751,7 +751,7 @@ void RecorderView::paint(juce::Graphics& g)
 
     // Forme d'onde en direct de la prise en cours (sous le texte d'aide)
     {
-        juce::Rectangle<float> a(24.0f, 930.0f, 832.0f, 34.0f);
+        juce::Rectangle<float> a(24.0f, 901.0f, 832.0f, 34.0f);
         g.setColour(skin.trackBg);
         g.fillRoundedRectangle(a, 4.0f);
         const float mid = a.getCentreY();
@@ -826,7 +826,7 @@ void RecorderView::resized()
 {
     // Meme espace logique 880x970 que le contenu PRISME.
     // Bandeau : PRISME + RECORDER + statut + BACK.
-    titleLabel.setBounds(0, 8, 880, 30);
+    titleLabel.setBounds(146, 8, 588, 30);
     backBtn.setBounds(740, 12, 124, 26);
     // Haut : RANDOMIZE + REROLL + mesures + INTENSITY sur une rangee.
     randomizeBtn.setBounds(24, 44, 100, 26);
@@ -840,11 +840,10 @@ void RecorderView::resized()
     stateLabel.setBounds(430, 70, 180, 20);
     tempoLabel.setBounds(616, 70, 240, 20);
     // LOOP STACK : 4 lignes visibles (34 px), defilement au-dela.
-    stackTitleLabel.setBounds(24, 70, 832, 20);
     stackViewport.setBounds(24, 92, 832, 142);
     stackEmptyLabel.setBounds(24, 92, 832, 142);
     {
-        int w = juce::jmax(stackViewport.getWidth(), 600);
+        int w = juce::jmax(600, stackViewport.getWidth() - ((int) rows.size() * TakeRow::h > stackViewport.getHeight() ? stackViewport.getScrollBarThickness() : 0));
         stackList.setSize(w, juce::jmax(1, (int) rows.size()) * TakeRow::h);
         for (size_t i = 0; i < rows.size(); ++i)
             rows[i]->setBounds(0, (int) i * TakeRow::h, w, TakeRow::h);
@@ -874,5 +873,5 @@ void RecorderView::resized()
     fileLabel.setBounds(24, 818, 832, 20);
     folderLabel.setBounds(24, 840, 620, 20);
     browseBtn.setBounds(652, 838, 204, 26);
-    hintLabel.setBounds(24, 866, 832, 60);
+    hintLabel.setBounds(24, 866, 832, 32);
 }

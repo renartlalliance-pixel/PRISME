@@ -178,18 +178,23 @@ namespace PrismeDiy
     // Lettres majuscules legerement decalees et penchees. Pas de mesure de
     // police : avance fixe, volontairement (texte decoratif).
     inline void markerText(juce::Graphics& g, const juce::String& text, float x, float y,
-                           float size, juce::Colour col, float angleDeg)
+                           float size, juce::Colour col, float angleDeg, float width)
     {
         juce::Graphics::ScopedSaveState ss(g);
         g.addTransform(juce::AffineTransform::rotation(juce::degreesToRadians(angleDeg), x, y));
-        g.setFont(juce::Font(size, juce::Font::bold | juce::Font::italic));
+        const juce::Font font(size, juce::Font::bold | juce::Font::italic);
+        g.setFont(font);
+        float total = 0.0f;
+        for (int i = 0; i < text.length(); ++i)
+            total += font.getStringWidthFloat(text.substring(i, i + 1));
+        g.addTransform(juce::AffineTransform::scale(juce::jmin(1.0f, width / juce::jmax(total, 1.0f)), 1.0f, x, y));
         juce::Random rnd(text.hashCode());
         float cx = x;
         for (int i = 0; i < text.length(); ++i)
         {
             const juce::String ch = text.substring(i, i + 1);
             const bool space = (ch == " ");
-            const float adv = size * (space ? 0.45f : 0.64f);
+            const float adv = font.getStringWidthFloat(ch);
             if (! space)
             {
                 juce::Graphics::ScopedSaveState s2(g);
@@ -197,8 +202,7 @@ namespace PrismeDiy
                 const float ja = (rnd.nextFloat() - 0.5f) * 0.16f;
                 g.addTransform(juce::AffineTransform::rotation(ja, cx + adv * 0.5f, y + jy));
                 g.setColour(col);
-                g.drawText(ch, juce::Rectangle<float>(cx, y + jy - size * 0.6f, adv, size * 1.2f),
-                           juce::Justification::centred, false);
+                g.drawSingleLineText(ch, juce::roundToInt(cx), juce::roundToInt(y + jy + size * 0.28f));
             }
             cx += adv;
         }
@@ -244,7 +248,7 @@ namespace PrismeDiy
         if (text.isNotEmpty())
         {
             const juce::Point<float> o = juce::Point<float>(x0 + 8.0f, cy + h * 0.22f).transformedBy(rot);
-            markerText(g, text, o.x, o.y, h * 0.62f, juce::Colour(0xff15151a), angleDeg);
+            markerText(g, text, o.x, o.y, h * 0.62f, juce::Colour(0xff15151a), angleDeg, w - 16.0f);
         }
     }
 
@@ -286,7 +290,7 @@ namespace PrismeDiy
         if (text.isNotEmpty())
         {
             const juce::Point<float> o = juce::Point<float>(cx - w * 0.22f, cy + h * 0.12f).transformedBy(rot);
-            markerText(g, text, o.x, o.y, h * 0.58f, juce::Colour(0xff2a1e0a), angleDeg);
+            markerText(g, text, o.x, o.y, h * 0.58f, juce::Colour(0xff2a1e0a), angleDeg, w * 0.52f);
         }
     }
 
@@ -311,7 +315,7 @@ namespace PrismeDiy
         g.setColour(juce::Colour(0xff7a6638));
         g.strokePath(p, juce::PathStrokeType(1.0f));
         const juce::Point<float> o = juce::Point<float>(x0 + w * 0.16f, cy + h * 0.18f).transformedBy(rot);
-        markerText(g, text, o.x, o.y, h * 0.58f, juce::Colour(0xff2b2116), angleDeg);
+        markerText(g, text, o.x, o.y, h * 0.58f, juce::Colour(0xff2b2116), angleDeg, w * 0.72f);
         tape(g, cx, y0 + 1.0f, w * 0.42f, 8.0f, angleDeg + 2.0f, juce::Colour(0xb0d8cfae));
     }
 

@@ -28,15 +28,10 @@ PrismeEditor::PrismeEditor(PrismeProcessor& p)
     skinLabel.setColour(juce::Label::textColourId, juce::Colour(0xff8a8fa8));
     skinLabel.setFont(juce::Font(12.0f, juce::Font::bold));
     content.addAndMakeVisible(skinLabel);
-    // mineprisme est masque du menu deroulant. L'ID de chaque entree reste
-    // "index du skin + 1" : selectedId - 1 donne donc toujours le bon index,
-    // aucun skin memorise (uiSkin) n'est decale.
-    for (int i = 0; i < (int) PrismeSkins::all().size(); ++i)
-    {
-        if (PrismeSkins::all()[i].name == "mineprisme")
-            continue;
-        skinBox.addItem(PrismeSkins::all()[i].name, i + 1);
-    }
+    // Les IDs correspondent aux indices memorises dans uiSkin, plus un.
+    const auto availableSkins = PrismeSkins::all();
+    for (size_t i = 0; i < availableSkins.size(); ++i)
+        skinBox.addItem(availableSkins[i].name, (int)i + 1);
     skinBox.setColour(juce::ComboBox::backgroundColourId, juce::Colour(0xff1a1d2e));
     skinBox.setColour(juce::ComboBox::textColourId, juce::Colours::white);
     skinBox.onChange = [this]
@@ -574,11 +569,11 @@ PrismeEditor::PrismeEditor(PrismeProcessor& p)
     content.addAndMakeVisible(footerLabel);
 
     // Skin memorise (propriete hors params audio), applique avant affichage.
-    // Valeur par defaut 2 = MONOLITH : utilisee UNIQUEMENT quand aucune
+    // Valeur par defaut 0 = CRYSTAL : utilisee UNIQUEMENT quand aucune
     // peau n'a ete memorisee. Un projet ayant deja enregistre une peau
     // conserve la sienne (le defaut ne s'applique jamais par-dessus).
     int skinIdx = juce::jlimit(0, (int) PrismeSkins::all().size() - 1,
-                               (int) apvts.state.getProperty("uiSkin", 2));
+                               (int) apvts.state.getProperty("uiSkin", 0));
     skinBox.setSelectedId(skinIdx + 1, juce::dontSendNotification);
     applySkin(skinIdx);
 
@@ -767,7 +762,7 @@ namespace SampleTable
     constexpr int rowH  = 50;     // hauteur d'une ligne (40 -> 50 : onde agrandie)
     // Colonnes (relatives a listX) : bouts PLAY/STOP et SUPPRIMER a droite.
     constexpr int playStopRelX = 494;  // x relatif du bouton PLAY/STOP
-    constexpr int delRelX   = 538;  // x relatif du bouton SUPPRIMER
+    constexpr int delRelX   = 534;  // x relatif du bouton SUPPRIMER
     constexpr int btnW      = 40;   // largeur commune des 2 bouts
     constexpr int maxRows   = 10;   // lignes visibles (interieur 344..864 : 10 x 50)
     // Colonnes de texte et miniature d'onde. Le nom, la duree et la cellule
@@ -939,26 +934,26 @@ void PrismeEditor::applySkin(int index)
         cb->setColour(juce::ComboBox::backgroundColourId, sk.comboBg);
         cb->setColour(juce::ComboBox::textColourId, sk.textMain);
     }
-    skinLabel.setColour(juce::Label::textColourId, sk.textDim);
+    skinLabel.setColour(juce::Label::textColourId, sk.crystalFaceplate ? sk.textOnWidget : sk.textDim);
 
     // Potards : etiquettes + afficheurs
     for (auto& k : knobs)
     {
-        k->label.setColour(juce::Label::textColourId, sk.textMain);
+        k->label.setColour(juce::Label::textColourId, sk.analog03 ? juce::Colour(0xff30271d) : sk.textMain);
         k->slider.setColour(juce::Slider::textBoxTextColourId, sk.readoutText);
         k->slider.setColour(juce::Slider::textBoxBackgroundColourId, sk.readoutBg);
     }
     // EQ
     for (int i = 0; i < 4; ++i)
     {
-        eqLabels[i].setColour(juce::Label::textColourId, sk.textMain);
+        eqLabels[i].setColour(juce::Label::textColourId, sk.analog03 ? juce::Colour(0xff30271d) : sk.textMain);
         eqSliders[i].setColour(juce::Slider::textBoxTextColourId, sk.readoutText);
         eqSliders[i].setColour(juce::Slider::textBoxBackgroundColourId, sk.readoutBg);
         eqSliders[i].setColour(juce::Slider::trackColourId, sk.trackBg);
         eqSliders[i].setColour(juce::Slider::thumbColourId, sk.accent);
     }
     // Titres
-    titleLabel.setColour(juce::Label::textColourId, sk.textMain);
+    titleLabel.setColour(juce::Label::textColourId, sk.crystalFaceplate ? sk.textOnWidget : sk.textMain);
     // NIGHTCITY : le titre "P R I S M E" est dessine en degrade dans
     // paintContent (halo + gradient), donc le label est masque pour ce skin.
     titleLabel.setVisible(! sk.neon);
@@ -988,7 +983,7 @@ void PrismeEditor::applySkin(int index)
         &bandLoLabel, &givreLabel, &swingLabel, &tailleLabel, &mirPredelayLabel, &mirColorLabel,
         &mirWidthLabel, &mirDecayLabel, &arpFxLabel1, &arpFxLabel2, &arpFxMixLabel, &arpRouteLabel, &cryoLabel };
     for (auto* lb : labs)
-        lb->setColour(juce::Label::textColourId, sk.textMain);
+        lb->setColour(juce::Label::textColourId, sk.analog03 ? juce::Colour(0xff30271d) : sk.textMain);
     juce::ToggleButton* togs[] = { &arpOnBtn, &arpSyncBtn, &movSyncBtn, &autoKeyBtn };
     for (auto* tb : togs)
         tb->setColour(juce::ToggleButton::textColourId, sk.textMain);
@@ -1062,7 +1057,7 @@ void PrismeEditor::applySkin(int index)
     pads.setColors(sk.accent, sk.accentHi, sk.panelBottom.brighter(0.08f));
     // Post Apo : spectrogramme et oscilloscope en vert phosphore (champs scope*).
     // ANALOG01 : spectre / oscilloscope bleus (champs scope*) sur fond bleu nuit.
-    const bool useScope = sk.diy || sk.analog03 || sk.analog01;
+    const bool useScope = sk.diy || sk.analog03 || sk.analog01 || sk.crystalFaceplate;
     // ANALOG03 : spectre vert phosphore
     spectro.setColors(useScope ? sk.scopeDeep : sk.accentDeep, useScope ? sk.scopeMid : sk.accent,
                       useScope ? sk.scopeHot : sk.accentHi); // BISECTION (re-actif pour trace)
@@ -1347,7 +1342,7 @@ void PrismeEditor::onPresetChosen()
     else if (id >= 100 && id - 100 < userPresetFiles.size())
     {
         applyingPreset = true;
-        int sk = apvts.state.getProperty("uiSkin", 2);
+        int sk = apvts.state.getProperty("uiSkin", 0);
         std::unique_ptr<juce::XmlElement> xml(juce::XmlDocument::parse(userPresetFiles[id - 100]));
         if (xml != nullptr)
         {
@@ -1412,7 +1407,7 @@ void PrismeEditor::selectSlot(int slot)
         return;
     // Sauve le son actuel dans l'emplacement qu'on quitte, charge l'autre.
     // Le skin est preserve (preference UI, pas parametre audio).
-    int sk = apvts.state.getProperty("uiSkin", 2);
+    int sk = apvts.state.getProperty("uiSkin", 0);
     if (activeSlot == 0) slotA = apvts.copyState();
     else slotB = apvts.copyState();
     activeSlot = slot;
@@ -1497,16 +1492,17 @@ void PrismeEditor::paintLiveWaveWindow(juce::Graphics& g)
 
     const int rows = juce::jmin((int) sampleLines.size(), maxRows);
     const int h = 64, bottom = 858;
-    int y = (rows == 0) ? (listY + 52) : (listY + rows * rowH + 8);
-    if (y + h > bottom)
+    const int y = rows == 0 ? listY + 52 : listY + rows * rowH + 8;
+    juce::Rectangle<float> a((float) listX, (float) y, (float) listW, (float) h);
+    if (a.getBottom() > bottom)
     {
-        if (! active)
-            return;              // liste pleine : fenetre seulement pendant le REC
-        y = bottom - h;          // superposee en bas pendant l'enregistrement
+        if (!active)
+            return;
+        // Espace libre a droite du transport, accessible meme avec dix prises.
+        a = { 1430.0f, 300.0f, 204.0f, 49.0f };
     }
-
-    const juce::Rectangle<float> a((float) listX, (float) y, (float) listW, (float) h);
-    const juce::Colour tDim = activeSkin.diy ? activeSkin.textOnWidget.withAlpha(0.65f) : activeSkin.textDim;
+    const juce::Colour tDim = (activeSkin.diy || activeSkin.crystalFaceplate)
+        ? activeSkin.textOnWidget.withAlpha(activeSkin.crystalFaceplate ? 0.78f : 0.65f) : activeSkin.textDim;
     const juce::Colour hot(0xffff5e5e);
 
     g.setColour(juce::Colours::black.withAlpha(active ? 0.60f : 0.35f));
@@ -1752,8 +1748,8 @@ void PrismeEditor::paintContent(juce::Graphics& g)
                             juce::Colour deep, juce::Colour mid, juce::Colour light)
     {
         (void) light;
-        juce::AffineTransform t = juce::AffineTransform::translation(cx, baseY)
-                                .rotated(tiltDeg * 3.14159265f / 180.0f);
+        juce::AffineTransform t = juce::AffineTransform::rotation(tiltDeg * 3.14159265f / 180.0f)
+                                .translated(cx, baseY);
         auto P = [&](float lx, float ly) { return juce::Point<float>(lx, ly).transformedBy(t); };
 
         // Halo
@@ -1826,7 +1822,7 @@ void PrismeEditor::paintContent(juce::Graphics& g)
     auto drawScrews = [&g, this](int x, int y, int w, int h)
     {
         // NIGHTCITY : panneaux sans vis, comme la maquette.
-        if (activeSkin.neon) return;
+        if (activeSkin.neon || activeSkin.crystalFaceplate) return;
 
         const int cx[4] = { x + 11, x + w - 11, x + 11, x + w - 11 };
         const int cy[4] = { y + 11, y + 11, y + h - 11, y + h - 11 };
@@ -1881,8 +1877,16 @@ void PrismeEditor::paintContent(juce::Graphics& g)
         grad.addColour(0.5, juce::Colour(0xff9d7bff));
         grad.addColour(0.75, juce::Colour(0xff5effc3));
     }
-    g.setGradientFill(grad);
-    g.fillRect(0, 0, 1670, 6);
+    if (activeSkin.crystalFaceplate)
+    {
+        g.setColour(activeSkin.panelEdge);
+        g.fillRect(0, 51, 1670, 1);
+    }
+    else
+    {
+        g.setGradientFill(grad);
+        g.fillRect(0, 0, 1670, 6);
+    }
 
     // Triangle "prisme" discret en fond (centre horizontal = 835)
     juce::Path prism;
@@ -2162,10 +2166,25 @@ void PrismeEditor::paintContent(juce::Graphics& g)
     // Autres skins : le panneau metal historique, inchange.
     auto paintModule = [&](PrismeDiy::Module m, float tiltDeg, int x, int y, int w, int h)
     {
+        if (activeSkin.crystalFaceplate && x == 1046)
+            return;  // Le spectre et les prises partagent la meme vitre.
         if (activeSkin.diy)
             PrismeDiy::paintModulePlate(g, activeSkin, m, x, y, w, h, tiltDeg);
         else
             paintBrushedPanel(x, y, w, h);
+
+        if (hwLAF.panelGrain.isValid())
+        {
+            juce::Graphics::ScopedSaveState state(g);
+            const auto bounds = juce::Rectangle<float>((float)x, (float)y, (float)w, (float)h).reduced(3.0f);
+            juce::Path face;
+            if (activeSkin.neon)
+                face = chamferPath(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), 12.0f);
+            else
+                face.addRoundedRectangle(bounds, 11.0f);
+            g.setTiledImageFill(hwLAF.panelGrain, x, y, activeSkin.diy ? 0.25f : 0.52f);
+            g.fillPath(face);
+        }
     };
 
     // ---- NIGHTCITY : cadre a double trait, comme la maquette.
@@ -2226,6 +2245,8 @@ void PrismeEditor::paintContent(juce::Graphics& g)
 
     auto panelOutline = [&](int x, int y, int w, int h)
     {
+        if (activeSkin.crystalFaceplate && x == 1046)
+            return;
         if (activeSkin.neon)
         {
             neonFrame((float) x, (float) y, (float) w, (float) h);
@@ -2302,6 +2323,19 @@ void PrismeEditor::paintContent(juce::Graphics& g)
     panelOutline(668, 486, 362, 394);
 
     // ---- COLONNE DROITE (x 1046..1654) ----
+    if (activeSkin.crystalFaceplate)
+    {
+        const juce::Rectangle<float> glass(1046.0f, 58.0f, 608.0f, 822.0f);
+        const auto shape = chamferPath(glass.getX(), glass.getY(), glass.getWidth(), glass.getHeight(), 13.0f);
+        juce::ColourGradient tint(juce::Colour(0xff0d2637), glass.getX(), glass.getY(),
+                                  juce::Colour(0xff03121e), glass.getRight(), glass.getBottom(), false);
+        g.setGradientFill(tint);
+        g.fillPath(shape);
+        g.setColour(juce::Colour(0xff3b647b));
+        g.strokePath(shape, juce::PathStrokeType(1.3f));
+        g.setColour(juce::Colour(0xff48595b));
+        g.drawHorizontalLine(282, 1062.0f, 1638.0f);
+    }
     // Panneau Spectrum : cadre metal + interieur noir (afficheur)
     paintModule(PrismeDiy::Module::GrisVert, -0.3f, 1046, 58, 608, 220);
     panelOutline(1046, 58, 608, 220);
@@ -2331,7 +2365,8 @@ void PrismeEditor::paintContent(juce::Graphics& g)
             // ANALOG01 : ecran noir-bleu (display_black_blue #020C16).
             g.setColour(activeSkin.analog01 ? juce::Colour(0xff020C16)
                         : activeSkin.analog03 ? juce::Colour(0xff050907)
-                        : activeSkin.diy ? juce::Colour(0xff04100a) : juce::Colour(0xff0a0603));
+                        : activeSkin.diy ? juce::Colour(0xff04100a)
+                        : activeSkin.crystalFaceplate ? juce::Colour(0xff030f19) : juce::Colour(0xff0a0603));
             g.fillRoundedRectangle(inset, 6.0f);
         }
         if (activeSkin.analog01)
@@ -2360,7 +2395,7 @@ void PrismeEditor::paintContent(juce::Graphics& g)
     paintModule(PrismeDiy::Module::Bordeaux, 0.25f, 1046, 286, 608, 594);
     panelOutline(1046, 286, 608, 594);
     {
-        juce::Rectangle<float> inset(1062.0f, 344.0f, 576.0f, 520.0f);
+        juce::Rectangle<float> inset(1062.0f, 356.0f, 576.0f, 508.0f);
         if (activeSkin.diy)
             PrismeDiy::paintBezel(g, inset, 8.0f);        // cadre noir epais encastre
         if (activeSkin.neon)
@@ -2385,7 +2420,8 @@ void PrismeEditor::paintContent(juce::Graphics& g)
             // ANALOG01 : fond d'ecran bleu nuit pour la grille oscilloscope.
             g.setColour(activeSkin.analog01 ? juce::Colour(0xff02101E)
                         : activeSkin.analog03 ? juce::Colour(0xff050907)
-                        : activeSkin.diy ? juce::Colour(0xff04100a) : juce::Colour(0xff0a0603));
+                        : activeSkin.diy ? juce::Colour(0xff04100a)
+                        : activeSkin.crystalFaceplate ? juce::Colour(0xff030f19) : juce::Colour(0xff0a0603));
             g.fillRoundedRectangle(inset, 6.0f);
         }
         if (activeSkin.analog01)
@@ -2445,7 +2481,8 @@ void PrismeEditor::paintContent(juce::Graphics& g)
 
     // Entrees de panneau (titres de zone)
     g.setFont(juce::Font(12.0f, juce::Font::bold));
-    g.setColour(activeSkin.diy ? activeSkin.textOnWidget : activeSkin.sectionTitle);
+    g.setColour((activeSkin.diy || activeSkin.crystalFaceplate)
+                    ? activeSkin.textOnWidget : activeSkin.sectionTitle);
     g.drawText("SPECTRUM", 1062, 74, 200, 16, juce::Justification::centredLeft);
     g.drawText("SAMPLES", 1062, 302, 200, 16, juce::Justification::centredLeft);
 
@@ -2453,8 +2490,12 @@ void PrismeEditor::paintContent(juce::Graphics& g)
     {
         using namespace SampleTable;
         // Post Apo : lignes sombres => texte clair. Autres skins : inchange.
-        const juce::Colour tMain = activeSkin.diy ? activeSkin.textOnWidget : activeSkin.textMain;
-        const juce::Colour tDim  = activeSkin.diy ? activeSkin.textOnWidget.withAlpha(0.65f) : activeSkin.textDim;
+        const juce::Colour tMain = (activeSkin.diy || activeSkin.crystalFaceplate)
+            ? activeSkin.textOnWidget : activeSkin.textMain;
+        const juce::Colour tDim = activeSkin.crystalFaceplate ? juce::Colour(0xffa3b7b9)
+            : activeSkin.diy ? activeSkin.textOnWidget.withAlpha(0.65f) : activeSkin.textDim;
+        const juce::Colour rowButtonBg = activeSkin.crystalFaceplate ? juce::Colour(0xff29393c)
+            : activeSkin.panelBottom.brighter(0.10f);
         g.setFont(juce::Font(10.0f, juce::Font::bold));
         g.setColour(tDim);
 
@@ -2556,9 +2597,10 @@ void PrismeEditor::paintContent(juce::Graphics& g)
                 juce::Rectangle<float> playStop((float) (listX + playStopRelX), (float) (y + 8),
                                              (float) btnW, (float) rowH - 16.0f);
                 g.setColour(sl.previewing ? activeSkin.accent
-                                          : activeSkin.panelBottom.brighter(0.10f));
+                                          : rowButtonBg);
                 g.fillRoundedRectangle(playStop, 3.0f);
-                g.setColour(sl.previewing ? activeSkin.accentHi : tDim);
+                g.setColour(sl.previewing
+                    ? (activeSkin.crystalFaceplate ? activeSkin.buttonActiveText : activeSkin.accentHi) : tDim);
                 g.setFont(juce::Font(9.0f, juce::Font::bold));
                 g.drawText(sl.previewing ? "STOP" : "PLAY", playStop.toNearestInt(),
                            juce::Justification::centred);
@@ -2568,7 +2610,7 @@ void PrismeEditor::paintContent(juce::Graphics& g)
                                            (float) btnW, (float) rowH - 16.0f);
                 bool armed = (sampleConfirmIdx == (int) i);
                 g.setColour(armed ? juce::Colour(0xff8a1f2e)
-                                  : activeSkin.panelBottom.brighter(0.10f));
+                                  : rowButtonBg);
                 g.fillRoundedRectangle(del, 3.0f);
                 g.setColour(armed ? juce::Colours::white : tDim);
                 g.drawText(armed ? "OK?" : "DEL", del.toNearestInt(),
@@ -2579,13 +2621,13 @@ void PrismeEditor::paintContent(juce::Graphics& g)
     }
 
     const bool isKay3 = activeSkin.name == "KAY<3";
-    if (! isKay3)
+    if (! isKay3 && ! activeSkin.crystalFaceplate)
     {
         // Cristaux historiques au premier plan, de part et d'autre du titre.
         drawCluster(585.0f, 46.0f, 1.0f, false);
-        drawCluster(1085.0f, 46.0f, 1.0f, true);
+        drawCluster(1260.0f, 46.0f, 1.0f, true);
     }
-    else
+    else if (isKay3)
     {
         // KAY<3 : elements decoratifs non interactifs. Les images sont mises
         // en cache par PrismeTextures et ne touchent jamais au thread audio.
@@ -2598,15 +2640,20 @@ void PrismeEditor::paintContent(juce::Graphics& g)
         // Mot « KAY » dans la bande noire du bandeau (a la place de la plaque).
         g.setFont(juce::Font(20.0f, juce::Font::bold));
         g.setColour(activeSkin.textDim);
-        g.drawText("K A Y", 346.0f, 24.0f, 226.0f, 54.0f, juce::Justification::centred, false);
+        g.drawText("K A Y", 346.0f, 4.0f, 226.0f, 42.0f, juce::Justification::centred, false);
         // Barres de niveau cyan -> rose, a droite du bandeau.
         g.setOpacity(0.90f);
         PrismeTextures::drawFit(g, PrismeTextures::kayLevelBars(),
-                                juce::Rectangle<float>(1360.0f, 40.0f, 270.0f, 52.0f));
+                                juce::Rectangle<float>(1264.0f, 0.0f, 246.0f, 48.0f));
         g.setOpacity(1.0f);
 
         // ---- Arc en ciel dans le coin bas-droit du panneau SAMPLES ----
         {
+            juce::Graphics::ScopedSaveState rainbowClip(g);
+            g.reduceClipRegion(juce::Rectangle<int>(1048, 288, 604, 590));
+            const int visibleRows = juce::jmin((int)sampleLines.size(), SampleTable::maxRows);
+            g.excludeClipRegion({ SampleTable::listX, SampleTable::listY,
+                                  SampleTable::listW, visibleRows * SampleTable::rowH });
             const float rcx = 1640.0f;
             const float rcy = 870.0f;
             const float rOuter = 180.0f;  // 2x plus grand
@@ -2708,7 +2755,7 @@ void PrismeEditor::paintContent(juce::Graphics& g)
         }
         g.setOpacity(0.96f);
         PrismeTextures::drawCover(g, PrismeTextures::kayPunk(),
-                                  juce::Rectangle<float>(574.0f, 16.0f, 93.0f, 68.0f));
+                                  juce::Rectangle<float>(557.0f, 0.0f, 74.0f, 54.0f));
         {
             g.saveState();
             juce::Path clip;
@@ -2722,11 +2769,20 @@ void PrismeEditor::paintContent(juce::Graphics& g)
         g.setOpacity(1.0f);
     }
 
+    if (activeSkin.crystalFaceplate)
+    {
+        fillPoly({ { 676.0f, 36.0f }, { 693.0f, 13.0f }, { 705.0f, 33.0f } }, activeSkin.accentDeep);
+        fillPoly({ { 676.0f, 36.0f }, { 693.0f, 13.0f }, { 693.0f, 28.0f } }, activeSkin.accent);
+        strokePoly({ { 676.0f, 36.0f }, { 693.0f, 13.0f }, { 705.0f, 33.0f } },
+                   activeSkin.accentHi.withAlpha(0.8f), 0.8f);
+    }
+
     // Signature gravee dans la machine (meme graisse que le titre)
     g.setFont(juce::Font(14.0f, juce::Font::bold));
     g.setColour(activeSkin.diy ? activeSkin.textOnWidget.withAlpha(0.55f) : activeSkin.textDim);
     g.drawText("by BloodyRedIndustrie", 1040, 13, 180, 26, juce::Justification::centredLeft);
-    g.setColour(activeSkin.diy ? activeSkin.textOnWidget : activeSkin.textMain);
+    g.setColour((activeSkin.diy || activeSkin.crystalFaceplate)
+                    ? activeSkin.textOnWidget : activeSkin.textMain);
     g.drawText("by BloodyRedIndustrie", 1040, 12, 180, 26, juce::Justification::centredLeft);
 }
 
@@ -2745,7 +2801,7 @@ void PrismeEditor::resized()
     cornerResizer.setBounds(getWidth() - 18, getHeight() - 18, 16, 16);
 
     constexpr int W = designW;
-    titleLabel.setBounds(0, 8, W, 34);
+    titleLabel.setBounds(640, 8, 390, 34);
     skinLabel.setBounds(16, 14, 36, 26);
     skinBox.setBounds(56, 14, 130, 26);
     undoBtn.setBounds(196, 14, 58, 26);
@@ -2762,8 +2818,8 @@ void PrismeEditor::resized()
     autoKeyBtn.setBounds(292, topY, 66, 26);
     octaveBox.setBounds(362, topY, 90, 26);
     givreLabel.setBounds(458, topY, 44, 26);
-    givreSlider.setBounds(504, topY, 76, 26);
-    randomBtn.setBounds(588, topY, 60, 26);
+    givreSlider.setBounds(504, topY, 58, 26);
+    randomBtn.setBounds(568, topY, 80, 26);
 
     // Knobs accords : 5 en rangee 1, 4 en rangee 2 (centree)
     int knobW = 112, knobH = 108;
@@ -2873,7 +2929,7 @@ void PrismeEditor::resized()
     {
         int x = eqStartX + i * (eqW + eqGap);
         eqSliders[i].setBounds(x, 518, eqW, eqH);
-        eqLabels[i].setBounds(x - 10, 518 + eqH, eqW + 20, 16);
+        eqLabels[i].setBounds(x - 3, 518 + eqH, eqW + 6, 16);
     }
 
     // ---- COLONNE DROITE (x 1046..1654) : SPECTRUM, SAMPLES ----

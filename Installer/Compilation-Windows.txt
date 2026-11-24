@@ -1,0 +1,11 @@
+PRISME 4.0.0 — Windows x64
+Installer Visual Studio 2022 avec les outils C++ et le SDK Windows, CMake, Git et NSIS 3.
+Depuis le dossier PRISME-main, compiler les deux cibles en Release.
+La configuration CMake telecharge JUCE 8.0.6. Le projet peut demander
+les droits d’ecriture dans le dossier VST3 lors de la copie finale.
+
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+cmake --build build --config Release --target Prisme_VST3 Prisme_Standalone
+
+Pour creer le programme d’installation, depuis le dossier Installer,
+lancer makensis PRISME.nsi. Le resultat est PRISME-Setup.exe.

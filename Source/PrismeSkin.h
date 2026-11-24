@@ -7,6 +7,8 @@
 struct PrismeSkin
 {
     juce::String name;
+    const char* materialResource = nullptr;
+    bool crystalFaceplate = false;
     // Fond + panneaux
     juce::Colour windowBg, panelTop, panelBottom, panelEdge, bevelHi;
     juce::Colour screwHi, screwLo;
@@ -68,26 +70,30 @@ namespace PrismeSkins
     {
         PrismeSkin s;
         s.name = "Crystal";
-        s.windowBg = juce::Colour(0xff07090f);
-        s.panelTop = juce::Colour(0xff101725); s.panelBottom = juce::Colour(0xff0a0e18);
-        s.panelEdge = juce::Colour(0xff2a3a55); s.bevelHi = juce::Colour(0xff5a6c8a);
+        s.crystalFaceplate = true;
+        s.windowBg = juce::Colour(0xff020b12);
+        s.panelTop = juce::Colour(0xff102838); s.panelBottom = juce::Colour(0xff04131e);
+        s.panelEdge = juce::Colour(0xff37586a); s.bevelHi = juce::Colour(0xff7095a7);
         s.screwHi = juce::Colour(0xff9aa0aa); s.screwLo = juce::Colour(0xff33363c);
-        s.textMain = juce::Colour(0xffeef4ff); s.textDim = juce::Colour(0xff8a93b8);
-        s.textOnWidget = s.textMain;
-        s.sectionTitle = juce::Colour(0xffbfe9ff);
-        s.accent = juce::Colour(0xff7df9ff); s.accentHi = juce::Colour(0xffd8fbff);
-        s.accentDeep = juce::Colour(0xff2a7a9a);
+        s.textMain = juce::Colour(0xffe2eff6); s.textDim = juce::Colour(0xffadc2ce);
+        s.textOnWidget = juce::Colour(0xffe8f0eb);
+        s.scopeDeep = juce::Colour(0xff404865);
+        s.scopeMid = juce::Colour(0xff36dfed);
+        s.scopeHot = juce::Colour(0xffeffff1);
+        s.sectionTitle = juce::Colour(0xffe6f7ff);
+        s.accent = juce::Colour(0xff36dfed); s.accentHi = juce::Colour(0xffd2faf2);
+        s.accentDeep = juce::Colour(0xff307b85);
         s.knobRing = s.accent; s.knobRingHi = s.accentHi;
-        s.knobBodyHi = juce::Colour(0xff1c2740); s.knobBodyLo = juce::Colour(0xff0b1020);
-        s.knobNeedle = juce::Colour(0xffd8fbff); s.knobCap = juce::Colour(0xff05070d);
-        s.readoutText = juce::Colour(0xff7df9ff); s.readoutBg = juce::Colour(0xff05070d);
+        s.knobBodyHi = juce::Colour(0xff36596c); s.knobBodyLo = juce::Colour(0xff071723);
+        s.knobNeedle = juce::Colour(0xffd2faf2); s.knobCap = juce::Colour(0xff03111a);
+        s.readoutText = juce::Colour(0xff36dfed); s.readoutBg = juce::Colour(0xff03111a);
         s.ledOffHi = juce::Colour(0xff3a4a5a); s.ledOffLo = juce::Colour(0xff121a24);
-        s.trackBg = juce::Colour(0xff0a0d14); s.trackEdge = juce::Colour(0xff3a4a5e);
-        s.thumbHi = juce::Colour(0xffc8ccd4); s.thumbLo = juce::Colour(0xff6f747e);
-        s.comboBg = juce::Colour(0xff0d1322);
-        s.comboArrow = juce::Colour(0xffc9e8f5);
-        s.buttonBg = juce::Colour(0xff16202f); s.buttonText = juce::Colours::white;
-        s.buttonActive = juce::Colour(0xff7df9ff); s.buttonActiveText = juce::Colour(0xff06121a);
+        s.trackBg = juce::Colour(0xff020c15); s.trackEdge = juce::Colour(0xff264554);
+        s.thumbHi = juce::Colour(0xffe2ded3); s.thumbLo = juce::Colour(0xff777b7a);
+        s.comboBg = juce::Colour(0xff0d2432);
+        s.comboArrow = juce::Colour(0xffbad7e4);
+        s.buttonBg = juce::Colour(0xff193340); s.buttonText = juce::Colours::white;
+        s.buttonActive = juce::Colour(0xff36dfed); s.buttonActiveText = juce::Colour(0xff06121a);
         return s;
     }
 
@@ -95,6 +101,7 @@ namespace PrismeSkins
     {
         PrismeSkin s;
         s.name = "Cosmic";
+        s.materialResource = "cosmic_material_png";
         s.windowBg = juce::Colour(0xff0d0714);
         s.panelTop = juce::Colour(0xff1c1030); s.panelBottom = juce::Colour(0xff120a20);
         s.panelEdge = juce::Colour(0xff4a2a66); s.bevelHi = juce::Colour(0xff7a5a9a);
@@ -122,6 +129,7 @@ namespace PrismeSkins
     {
         PrismeSkin s;
         s.name = "Monolith";
+        s.materialResource = "monolith_material_png";
         s.windowBg = juce::Colour(0xff101012);
         s.panelTop = juce::Colour(0xff232326); s.panelBottom = juce::Colour(0xff17171a);
         s.panelEdge = juce::Colour(0xff3a3a40); s.bevelHi = juce::Colour(0xff5a5a60);
@@ -149,6 +157,7 @@ namespace PrismeSkins
     {
         PrismeSkin s;
         s.name = "Toxic";
+        s.materialResource = "toxic_material_png";
         s.windowBg = juce::Colour(0xff060a06);
         s.panelTop = juce::Colour(0xff0f1c10); s.panelBottom = juce::Colour(0xff090f0a);
         s.panelEdge = juce::Colour(0xff1e4a26); s.bevelHi = juce::Colour(0xff3a6a44);
@@ -176,6 +185,7 @@ namespace PrismeSkins
     {
         PrismeSkin s;
         s.name = "KAY<3";
+        s.materialResource = "kay_material_png";
         // Neon noir : contours cyan, reflets bleus et touches magenta.
         s.windowBg = juce::Colour(0xff05091a);
         s.panelTop = juce::Colour(0xff07132b); s.panelBottom = juce::Colour(0xff030817);
@@ -210,6 +220,7 @@ namespace PrismeSkins
         // est active par le drapeau neon, traite dans LookAndFeel et l'editeur.
         PrismeSkin s = kay3();
         s.name = "NightCity";
+        s.materialResource = "nightcity_material_png";
         s.neon = true;
         s.kay  = false;   // NIGHTCITY garde son style propre (chanfreins, equerres)
         // Degrade de panneau un peu plus clair : donne du volume sans eclaircir le fond.
@@ -222,6 +233,7 @@ namespace PrismeSkins
     {
         PrismeSkin s;
         s.name = "Mix";
+        s.materialResource = "mix_material_png";
         s.windowBg = juce::Colour(0xff0b0c0f);
         s.panelTop = juce::Colour(0xff17191e); s.panelBottom = juce::Colour(0xff101215);
         s.panelEdge = juce::Colour(0xff2e323a); s.bevelHi = juce::Colour(0xff4e525b);
@@ -254,6 +266,7 @@ namespace PrismeSkins
         // les 6 autres skins restent 100 % dessines par code.
         PrismeSkin s;
         s.name = "mineprisme";
+        s.materialResource = "mineprisme_material_png";
         s.hasTextures = true;
         // Fond de fenetre : brun tres sombre (presque noir), comme la maquette.
         s.windowBg = juce::Colour(0xff180f07);
@@ -262,11 +275,11 @@ namespace PrismeSkins
         s.panelEdge = juce::Colour(0xff2c1d0d); s.bevelHi = juce::Colour(0xffb58c55);
         s.screwHi = juce::Colour(0xff9c8258); s.screwLo = juce::Colour(0xff20160a);
         // Texte grave dans le metal (etiquettes de potards) : brun tres fonce.
-        s.textMain = juce::Colour(0xff231706);
+        s.textMain = juce::Colour(0xfff9e7ba);
         // Texte sur widgets sombres (combos, editeurs, cellules)
         s.textOnWidget = juce::Colour(0xffe8d6b4);
-        s.textDim = juce::Colour(0xff6a5232);
-        s.sectionTitle = juce::Colour(0xff5e1c08);
+        s.textDim = juce::Colour(0xffd5bf99);
+        s.sectionTitle = juce::Colour(0xfff6e3b6);
         s.accent = juce::Colour(0xffff7a1a); s.accentHi = juce::Colour(0xffffc48a);
         s.accentDeep = juce::Colour(0xff7a1c0e);
         // v5 ORANGE KNOBS : bague lumineuse des potards en orange vif.
@@ -290,6 +303,7 @@ namespace PrismeSkins
         // Fond patine bronze, panneaux avec patine 0.20, scratches 0.08.
         PrismeSkin s = mineprisme();
         s.name = "analog2";
+        s.materialResource = "analog2_material_png";
         s.metalV2 = true;
         return s;
     }
@@ -303,6 +317,7 @@ namespace PrismeSkins
         // puis on surcharge ce qui change.
         PrismeSkin s = mineprisme();
         s.name = "Post Apo";
+        s.materialResource = "postapo_material_png";
         s.diy = true;
         s.windowBg = juce::Colour(0xff1a130d);
         s.panelEdge = juce::Colour(0x66000000);
@@ -330,6 +345,7 @@ namespace PrismeSkins
         // accents rouges sovietiques, potards noirs a repere vert.
         PrismeSkin s;
         s.name = "analog03";
+        s.materialResource = "analog03_material_png";
         s.hasTextures = true;
         s.analog03 = true;
         // Fond : bois sombre walnut
@@ -376,6 +392,7 @@ namespace PrismeSkins
         // grille oscilloscope bleue dans SAMPLES.
         PrismeSkin s;
         s.name = "analog01";
+        s.materialResource = "analog01_material_png";
         s.hasTextures = true;
         s.analog01 = true;
         // Fond : acier brossi platine / argent froid (texture metal brossi)

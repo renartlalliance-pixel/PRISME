@@ -3,7 +3,7 @@ project(Prisme VERSION 4.0.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 include(FetchContent)
 FetchContent_Declare(
@@ -39,6 +39,19 @@ juce_generate_juce_header(Prisme)
 juce_add_binary_data(PrismeAssets
   NAMESPACE PrismeAssets
   SOURCES
+    Assets/Skins/Collection/cosmic_material.png
+    Assets/Skins/Collection/monolith_material.png
+    Assets/Skins/Collection/toxic_material.png
+    Assets/Skins/Collection/mix_material.png
+    Assets/Skins/Collection/mineprisme_material.png
+    Assets/Skins/Collection/analog2_material.png
+    Assets/Skins/Collection/kay_material.png
+    Assets/Skins/Collection/postapo_material.png
+    Assets/Skins/Collection/nightcity_material.png
+    Assets/Skins/Collection/analog03_material.png
+    Assets/Skins/Collection/analog01_material.png
+    Assets/Skins/Crystal/crystal_dial.png
+    Assets/Skins/Crystal/crystal_fader.png
     Assets/Skins/KAY3/punk_masque_ledge.png
     Assets/Skins/KAY3/doll_emo_goth_ledge.png
     Assets/Skins/KAY3/licorne_tete_filigrane.png

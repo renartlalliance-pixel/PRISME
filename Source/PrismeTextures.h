@@ -17,6 +17,20 @@ namespace PrismeTextures
         return juce::ImageCache::getFromMemory (data, dataSize);
     }
 
+    inline const juce::Image& crystalDial()
+    {
+        static const juce::Image image = load(PrismeAssets::crystal_dial_png,
+                                              PrismeAssets::crystal_dial_pngSize);
+        return image;
+    }
+
+    inline const juce::Image& crystalFader()
+    {
+        static const juce::Image image = load(PrismeAssets::crystal_fader_png,
+                                              PrismeAssets::crystal_fader_pngSize);
+        return image;
+    }
+
     // -- Potard --
     inline const juce::Image& knobBase()
     {
